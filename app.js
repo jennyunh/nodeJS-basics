@@ -1,34 +1,32 @@
-const http = require("http");
+//require express gives a function
+const express = require('express');
 
-/* The request object has a url property that holds the path
+//express function gives an object called an app object.
+//app object has a bunch of functionalities. 
+const app = express();
 
-e.g: localhost:3000/currenttime    the url property will hold
 
-"/currenttime" */
+//express by default sets the status code to 200
+//get method allows us to define a request handler for incoming get requests.
+//1st parameter: the path
+//2nd parameter: the function to execute when path is visited.
+//An anonymous function is allowed.
+//function takes 3 parameters automatically. request, response, and next function.
+//response object has a bunch of functionalities on it to send back a response.
+//the combination of a path and a request + response handler function is
+//called a route or route handler.
+app.get('/currenttime', function (request, response, next) {
+response.send('<h1>' + new Date().toISOString() + '</h1>')
+});
 
-//function that handles incoming requests
-function handleRequest(request, response) {
-  if (request.url === "/currenttime") {
-    response.statusCode = 200;
-    response.end('<h1>' + new Date().toISOString() + '</h1>')
-  } else if (request.url === "/") {
-    //statusCode is a property in the response object
-    //statusCode tells browser whether a request succeeded or not.
-    //200 is success
-    //404 is does not exist
 
-    //localhost: 3000/currenttime
+//another route for just / path
+app.get('/', function(request, response) {
+  response.send("<h1>Hello World!</h1>")
+})
 
-    response.statusCode = 200;
 
-    //end preparing the reponse and send it to the client.
-    response.end("<h1>HELLLLLLOOOO WOOORROLDOLODLDOLD</h1>");
-  }
-}
+//listen to port 3000
+app.listen(3000)
 
-//first parameter wanted by createServer is
-//a request listener.
-const server = http.createServer(handleRequest);
 
-//listen to incoming requests on port 3000
-server.listen(3001);
