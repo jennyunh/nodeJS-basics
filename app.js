@@ -1,3 +1,9 @@
+//npm install nodemon --save-dev so the server auto restarts 
+//whenever code changes.
+//add  "start": "nodemon app.js" under scripts in package json
+//if you named it something thats not "start", then you have to do 
+//npm run "the name"
+
 //require the filesystem package that's built into nodeJS 
 const fs = require('fs');
 
@@ -65,6 +71,30 @@ fs.writeFileSync(filePath, JSON.stringify(existingUsers))
 
 res.send('<h1>Username stored!</h1>');
 })
+
+
+
+//route for getting file data with users
+app.get('/users', function(request, response) {
+  const filePath = path.join(__dirname, 'data', 'users.json')
+ 
+const fileData = fs.readFileSync(filePath)
+
+const existingUsers = JSON.parse(fileData)
+
+let responseData = '<ul>';
+
+for (const user of existingUsers){
+  responseData = responseData + '<li>' + user + '</li>'
+}
+
+responseData += '</ul>'
+
+
+  response.send(responseData);
+
+})
+
 
 //listen to port 3000
 app.listen(3000)
