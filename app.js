@@ -1,3 +1,11 @@
+//require the filesystem package that's built into nodeJS 
+const fs = require('fs');
+
+
+//package lets you construct complete paths that work on all operating systems
+const path = require('path');
+
+
 //require express gives a function
 const express = require('express');
 
@@ -37,7 +45,24 @@ app.get('/', function(request, response) {
 //route for POST method after submitting the form
 app.post('/storeUser', function(req, res){
 const username = req.body.username;
-console.log(username);
+
+
+//tell file system package where the file you want to write is
+//dirname is a built-in variable that holds the absolute path of this project directory
+const filePath = path.join(__dirname, 'data', 'users.json')
+
+//file data is the file contents in text format
+const fileData = fs.readFileSync(filePath)
+
+//change data from text to javascript
+const existingUsers = JSON.parse(fileData)
+
+existingUsers.push(username);
+
+//writeFileSync wants raw text not javascript
+fs.writeFileSync(filePath, JSON.stringify(existingUsers))
+
+
 res.send('<h1>Username stored!</h1>');
 })
 
